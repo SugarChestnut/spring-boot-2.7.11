@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date 2024/5/7 09:12
  */
 @ConfigurationProperties(prefix = "normal")
-public class NormalConfig {
+public class NormalProperties {
 
     private String key;
 
