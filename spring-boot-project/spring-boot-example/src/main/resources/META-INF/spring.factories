@@ -1,0 +1,4 @@
+org.springframework.context.ApplicationContextInitializer=org.springframework.boot.example.factory.MyApplicationContextInitializer
+org.springframework.context.ApplicationListener=org.springframework.boot.example.factory.MyApplicationListener
+org.springframework.boot.BootstrapRegistryInitializer=org.springframework.boot.example.factory.MyBootstrapRegistryInitializer
+org.springframework.boot.SpringApplicationRunListener=org.springframework.boot.example.factory.MySpringApplicationRunListener
