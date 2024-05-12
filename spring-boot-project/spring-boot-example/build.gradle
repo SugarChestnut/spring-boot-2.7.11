@@ -11,6 +11,9 @@ description = "Spring Boot Example"
 
 dependencies {
     api(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-web"))
+    api(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-actuator"))
     compileOnly(project(":spring-boot-project:spring-boot-tools:spring-boot-loader"))
+
+    testApi(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-test"))
 }
 

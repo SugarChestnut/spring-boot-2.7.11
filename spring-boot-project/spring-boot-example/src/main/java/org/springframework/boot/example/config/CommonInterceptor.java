@@ -13,8 +13,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author rtt
  * @date 2024/5/6 16:39
  */
-//@Component
-public class NormalInterceptor implements HandlerInterceptor {
+@Component
+public class CommonInterceptor implements HandlerInterceptor {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("NormalInterceptor preHandle");

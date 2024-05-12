@@ -2,3 +2,11 @@ normal:
     key: 'rtt'
 server:
     port: 9090
+
+management:
+    endpoints:
+        web:
+            base-path: /actuator
+            exposure:
+#                beans, conditions, env, health, info
+                include: '*'
