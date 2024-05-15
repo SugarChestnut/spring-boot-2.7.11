@@ -121,12 +121,18 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 		if (!isEnabled(annotationMetadata)) {
 			return EMPTY_ENTRY;
 		}
+		// 解析 @EnableAutoConfiguration
 		AnnotationAttributes attributes = getAttributes(annotationMetadata);
+		// 获取 spring.factories 等配置文件中的自动配置类
 		List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
+		// 移除重复的配置类
 		configurations = removeDuplicates(configurations);
 		Set<String> exclusions = getExclusions(annotationMetadata, attributes);
+		// 检查存在于类路径，却不在自动配置类集合中的排除类
 		checkExcludedClasses(configurations, exclusions);
+		// 排除类
 		configurations.removeAll(exclusions);
+		// 加载 spring.factories 中配置的 filter，默认就一个，过滤不在类路径下的类
 		configurations = getConfigurationClassFilter().filter(configurations);
 		fireAutoConfigurationImportEvents(configurations, exclusions);
 		return new AutoConfigurationEntry(configurations, exclusions);
