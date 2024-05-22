@@ -134,6 +134,7 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 		configurations.removeAll(exclusions);
 		// 加载 spring.factories 中配置的 filter，默认就一个，过滤不在类路径下的类
 		configurations = getConfigurationClassFilter().filter(configurations);
+		// 加载 spring.factories 中配置的 AutoConfigurationImportListener，调用事件监听方法
 		fireAutoConfigurationImportEvents(configurations, exclusions);
 		return new AutoConfigurationEntry(configurations, exclusions);
 	}
@@ -298,6 +299,7 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 		if (!listeners.isEmpty()) {
 			AutoConfigurationImportEvent event = new AutoConfigurationImportEvent(this, configurations, exclusions);
 			for (AutoConfigurationImportListener listener : listeners) {
+				// aware 接口
 				invokeAwareMethods(listener);
 				listener.onAutoConfigurationImportEvent(event);
 			}
@@ -383,6 +385,7 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 			String[] candidates = StringUtils.toStringArray(configurations);
 			boolean skipped = false;
 			for (AutoConfigurationImportFilter filter : this.filters) {
+				// false 表示需要排除
 				boolean[] match = filter.match(candidates, this.autoConfigurationMetadata);
 				for (int i = 0; i < match.length; i++) {
 					if (!match[i]) {

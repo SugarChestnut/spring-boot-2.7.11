@@ -1,4 +1,4 @@
-package org.springframework.boot.example.config;
+package org.springframework.boot.example.lifecycle;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

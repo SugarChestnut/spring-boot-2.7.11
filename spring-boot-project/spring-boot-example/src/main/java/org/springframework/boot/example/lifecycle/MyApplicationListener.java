@@ -1,4 +1,4 @@
-package org.springframework.boot.example.factory;
+package org.springframework.boot.example.lifecycle;
 
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;

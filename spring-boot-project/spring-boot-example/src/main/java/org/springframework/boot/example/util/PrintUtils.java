@@ -13,4 +13,8 @@ public class PrintUtils {
         }
         System.out.println("=======================\n\n");
     }
+
+    public static void print(String message) {
+        System.out.println("---" + message);
+    }
 }

@@ -1,4 +1,4 @@
-package org.springframework.boot.example.factory;
+package org.springframework.boot.example.lifecycle;
 
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;

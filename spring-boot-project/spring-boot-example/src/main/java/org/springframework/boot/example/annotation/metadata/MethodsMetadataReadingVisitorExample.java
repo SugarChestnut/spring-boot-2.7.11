@@ -1,4 +1,4 @@
-package org.springframework.boot.example.metadata;
+package org.springframework.boot.example.annotation.metadata;
 
 import org.springframework.boot.example.SpringBootExampleApplication;
 import org.springframework.boot.example.util.PrintUtils;

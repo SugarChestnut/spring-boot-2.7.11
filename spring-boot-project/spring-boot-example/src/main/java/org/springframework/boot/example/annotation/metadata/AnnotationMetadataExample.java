@@ -1,4 +1,4 @@
-package org.springframework.boot.example.metadata;
+package org.springframework.boot.example.annotation.metadata;
 
 import org.springframework.boot.example.SpringBootExampleApplication;
 import org.springframework.cglib.core.ReflectUtils;
@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author rtt
