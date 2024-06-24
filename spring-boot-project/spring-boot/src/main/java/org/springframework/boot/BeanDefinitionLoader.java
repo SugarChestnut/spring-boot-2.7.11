@@ -67,13 +67,13 @@ class BeanDefinitionLoader {
 	private static final Pattern GROOVY_CLOSURE_PATTERN = Pattern.compile(".*\\$_.*closure.*");
 
 	private final Object[] sources;
-
+	// 注解 bean
 	private final AnnotatedBeanDefinitionReader annotatedReader;
-
+	// xml bean
 	private final AbstractBeanDefinitionReader xmlReader;
-
+	// groovy
 	private final BeanDefinitionReader groovyReader;
-
+	// 配合 AnnotatedBeanDefinitionReader 使用
 	private final ClassPathBeanDefinitionScanner scanner;
 
 	private ResourceLoader resourceLoader;

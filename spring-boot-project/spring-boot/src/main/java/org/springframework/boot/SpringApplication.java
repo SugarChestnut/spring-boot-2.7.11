@@ -181,6 +181,9 @@ public class SpringApplication {
 
 	private Set<Class<?>> primarySources;
 
+	/**
+	 * 为类名、包名、XML 配置资源路径
+	 */
 	private Set<String> sources = new LinkedHashSet<>();
 
 	private Class<?> mainApplicationClass;
@@ -264,8 +267,7 @@ public class SpringApplication {
 		// 判断当前是否是web环境
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
 		// 解析 META-INF/spring.factories 文件，获取 ApplicationContextInitializer、ApplicationListener、BootstrapRegistryInitializer
-		this.bootstrapRegistryInitializers = new ArrayList<>(
-				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
+		this.bootstrapRegistryInitializers = new ArrayList<>(getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
 		this.mainApplicationClass = deduceMainApplicationClass();
@@ -389,7 +391,7 @@ public class SpringApplication {
 			ApplicationArguments applicationArguments, Banner printedBanner) {
 		// 设置环境类
 		context.setEnvironment(environment);
-		// 后置配置
+		// 其他配置
 		postProcessApplicationContext(context);
 		// 应用初始化器
 		applyInitializers(context);
@@ -402,6 +404,7 @@ public class SpringApplication {
 		}
 		// Add boot specific singleton beans
 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+		// 注册两个 bean
 		beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
 		if (printedBanner != null) {
 			beanFactory.registerSingleton("springBootBanner", printedBanner);
@@ -418,6 +421,7 @@ public class SpringApplication {
 		}
 		context.addBeanFactoryPostProcessor(new PropertySourceOrderingBeanFactoryPostProcessor(context));
 		// Load the sources
+		// 加载资源
 		Set<Object> sources = getAllSources();
 		Assert.notEmpty(sources, "Sources must not be empty");
 		// 加载 beanDefinition

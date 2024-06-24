@@ -11,6 +11,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Map;
 
+/**
+ *  配置源
+ */
 @SpringBootApplication
 public class SpringBootExampleApplication {
 
