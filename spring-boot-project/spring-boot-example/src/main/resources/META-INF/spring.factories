@@ -1,4 +1,4 @@
-org.springframework.context.ApplicationContextInitializer=org.springframework.boot.example.lifecycle.MyApplicationContextInitializer
-org.springframework.context.ApplicationListener=org.springframework.boot.example.lifecycle.MyApplicationListener
-org.springframework.boot.BootstrapRegistryInitializer=org.springframework.boot.example.lifecycle.MyBootstrapRegistryInitializer
-org.springframework.boot.SpringApplicationRunListener=org.springframework.boot.example.lifecycle.MySpringApplicationRunListener
+#org.springframework.context.ApplicationContextInitializer=org.springframework.boot.example.lifecycle.MyApplicationContextInitializer
+#org.springframework.context.ApplicationListener=org.springframework.boot.example.lifecycle.MyApplicationListener
+#org.springframework.boot.BootstrapRegistryInitializer=org.springframework.boot.example.lifecycle.MyBootstrapRegistryInitializer
+#org.springframework.boot.SpringApplicationRunListener=org.springframework.boot.example.lifecycle.MySpringApplicationRunListener
