@@ -316,7 +316,7 @@ public class SpringApplication {
 			// 创建容器
 			context = createApplicationContext();
 			context.setApplicationStartup(this.applicationStartup);
-			// 准备容器
+			// 设置环境，使用初始化器初始化、加载 bean
 			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
 			// 刷新容器
 			refreshContext(context);
