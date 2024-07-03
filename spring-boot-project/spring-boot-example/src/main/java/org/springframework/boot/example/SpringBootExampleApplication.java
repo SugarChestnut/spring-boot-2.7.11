@@ -19,7 +19,7 @@ public class SpringBootExampleApplication {
 
     public static void main(String[] args) {
 //        SpringApplication.run(SpringBootExampleApplication.class, args);
-
+        // 入口
         ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(SpringBootExampleApplication.class)
                 .web(WebApplicationType.NONE)
                 .properties()
@@ -27,13 +27,14 @@ public class SpringBootExampleApplication {
                 .run(args);
 
         Map<String, Formatter> formatterMap = applicationContext.getBeansOfType(Formatter.class);
-        System.out.println(formatterMap.size());
         formatterMap.forEach((key, value) -> {
             PrintUtils.print(key);
             PrintUtils.print(value.getClass().getName());
         });
 
         applicationContext.close();
+
+        System.getProperties().forEach((key, value) -> System.out.println(key + "--" + value));
     }
 
 
