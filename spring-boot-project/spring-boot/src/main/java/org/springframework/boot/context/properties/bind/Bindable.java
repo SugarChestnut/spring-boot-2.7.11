@@ -276,6 +276,7 @@ public final class Bindable<T> {
 	 */
 	public static <T> Bindable<T> of(ResolvableType type) {
 		Assert.notNull(type, "Type must not be null");
+		// 包装类型
 		ResolvableType boxedType = box(type);
 		return new Bindable<>(type, boxedType, null, NO_ANNOTATIONS, NO_BIND_RESTRICTIONS);
 	}

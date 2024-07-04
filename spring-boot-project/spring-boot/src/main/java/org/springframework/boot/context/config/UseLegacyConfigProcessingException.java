@@ -65,6 +65,7 @@ final class UseLegacyConfigProcessingException extends ConfigDataException {
 	 */
 	static void throwIfRequested(Binder binder) {
 		try {
+			// 获取 spring.config.use-legacy-processing 参数设置到 BOOLEAN 中
 			binder.bind(PROPERTY_NAME, BOOLEAN, BIND_HANDLER);
 		}
 		catch (BindException ex) {

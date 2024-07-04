@@ -91,6 +91,7 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 	 */
 	ConfigDataEnvironmentContributors withProcessedImports(ConfigDataImporter importer,
 			ConfigDataActivationContext activationContext) {
+		// importPhase = BEFORE_PROFILE_ACTIVATION
 		ImportPhase importPhase = ImportPhase.get(activationContext);
 		this.logger.trace(LogMessage.format("Processing imports for phase %s. %s", importPhase,
 				(activationContext != null) ? activationContext : "no activation context"));
@@ -102,8 +103,11 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 				this.logger.trace(LogMessage.format("Processed imports for of %d contributors", processed));
 				return result;
 			}
+			// 未绑定资源处理
 			if (contributor.getKind() == Kind.UNBOUND_IMPORT) {
+				// 解析未绑定资源，返回一个已绑定资源
 				ConfigDataEnvironmentContributor bound = contributor.withBoundProperties(result, activationContext);
+				// 复制，用绑定资源替换未绑定资源
 				result = new ConfigDataEnvironmentContributors(this.logger, this.bootstrapContext,
 						result.getRoot().withReplacement(contributor, bound));
 				continue;
@@ -120,6 +124,7 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 					asContributors(imported));
 			result = new ConfigDataEnvironmentContributors(this.logger, this.bootstrapContext,
 					result.getRoot().withReplacement(contributor, contributorAndChildren));
+			// 计数
 			processed++;
 		}
 	}
@@ -140,6 +145,7 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 
 	private ConfigDataEnvironmentContributor getNextToProcess(ConfigDataEnvironmentContributors contributors,
 			ConfigDataActivationContext activationContext, ImportPhase importPhase) {
+		// 循环 root
 		for (ConfigDataEnvironmentContributor contributor : contributors.getRoot()) {
 			if (contributor.getKind() == Kind.UNBOUND_IMPORT
 					|| isActiveWithUnprocessedImports(activationContext, importPhase, contributor)) {

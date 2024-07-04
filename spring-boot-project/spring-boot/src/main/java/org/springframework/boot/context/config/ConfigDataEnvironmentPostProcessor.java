@@ -102,6 +102,7 @@ public class ConfigDataEnvironmentPostProcessor implements EnvironmentPostProces
 			getConfigDataEnvironment(environment, resourceLoader, additionalProfiles).processAndApply();
 		}
 		catch (UseLegacyConfigProcessingException ex) {
+			// 使用传统方式加载配置
 			this.logger.debug(LogMessage.format("Switching to legacy config file processing [%s]",
 					ex.getConfigurationProperty()));
 			configureAdditionalProfiles(environment, additionalProfiles);

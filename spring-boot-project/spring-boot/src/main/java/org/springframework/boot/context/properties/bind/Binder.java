@@ -185,7 +185,9 @@ public class Binder {
 		for (ConfigurationPropertySource source : sources) {
 			Assert.notNull(source, "Sources must not contain null elements");
 		}
+		// 源
 		this.sources = sources;
+		// 解析器
 		this.placeholdersResolver = (placeholdersResolver != null) ? placeholdersResolver : PlaceholdersResolver.NONE;
 		this.bindConverter = BindConverter.get(conversionServices, propertyEditorInitializer);
 		this.defaultBindHandler = (defaultBindHandler != null) ? defaultBindHandler : BindHandler.DEFAULT;
@@ -527,6 +529,7 @@ public class Binder {
 	 */
 	public static Binder get(Environment environment, BindHandler defaultBindHandler) {
 		Iterable<ConfigurationPropertySource> sources = ConfigurationPropertySources.get(environment);
+		// 创建 SPEL 解析器
 		PropertySourcesPlaceholdersResolver placeholdersResolver = new PropertySourcesPlaceholdersResolver(environment);
 		return new Binder(sources, placeholdersResolver, null, null, defaultBindHandler);
 	}

@@ -137,10 +137,12 @@ class ConfigDataEnvironment {
 	ConfigDataEnvironment(DeferredLogFactory logFactory, ConfigurableBootstrapContext bootstrapContext,
 			ConfigurableEnvironment environment, ResourceLoader resourceLoader, Collection<String> additionalProfiles,
 			ConfigDataEnvironmentUpdateListener environmentUpdateListener) {
+		// 创建绑定器
 		Binder binder = Binder.get(environment);
 		UseLegacyConfigProcessingException.throwIfRequested(binder);
 		this.logFactory = logFactory;
 		this.logger = logFactory.getLog(getClass());
+		// 获取 spring.config.on-not-found 属性，默认 false
 		this.notFoundAction = binder.bind(ON_NOT_FOUND_PROPERTY, ConfigDataNotFoundAction.class)
 			.orElse(ConfigDataNotFoundAction.FAIL);
 		this.bootstrapContext = bootstrapContext;
@@ -161,6 +163,7 @@ class ConfigDataEnvironment {
 	private ConfigDataEnvironmentContributors createContributors(Binder binder) {
 		this.logger.trace("Building config data environment contributors");
 		MutablePropertySources propertySources = this.environment.getPropertySources();
+		// 一个配置文件一个 contributor
 		List<ConfigDataEnvironmentContributor> contributors = new ArrayList<>(propertySources.size() + 10);
 		PropertySource<?> defaultPropertySource = null;
 		for (PropertySource<?> propertySource : propertySources) {
@@ -170,14 +173,21 @@ class ConfigDataEnvironment {
 			else {
 				this.logger.trace(LogMessage.format("Creating wrapped config data contributor for '%s'",
 						propertySource.getName()));
+				// Kind = EXISTING
 				contributors.add(ConfigDataEnvironmentContributor.ofExisting(propertySource));
 			}
 		}
+		// 添加额外的配置源, KIND = INITIAL_IMPORT
 		contributors.addAll(getInitialImportContributors(binder));
+		// 放置在最后
 		if (defaultPropertySource != null) {
 			this.logger.trace("Creating wrapped config data contributor for default property source");
 			contributors.add(ConfigDataEnvironmentContributor.ofExisting(defaultPropertySource));
 		}
+		// 创建 Contributors，root 是一个 contributor，有两个属性，
+		// 一个是 Kind = ROOT，一个是 Map<ImportPhase, List<ConfigDataEnvironmentContributor>> 的 children 子属性，相当于根节点
+		// ImportPhase = BEFORE_PROFILE_ACTIVATION，在激活 profile 之前
+		// 实际带有配置源的 contributor 相当于叶子节点
 		return createContributors(contributors);
 	}
 
@@ -223,15 +233,21 @@ class ConfigDataEnvironment {
 	void processAndApply() {
 		ConfigDataImporter importer = new ConfigDataImporter(this.logFactory, this.notFoundAction, this.resolvers,
 				this.loaders);
+		// 向 BootstrapContext 注册 binder
 		registerBootstrapBinder(this.contributors, null, DENY_INACTIVE_BINDING);
+		// 初始化
 		ConfigDataEnvironmentContributors contributors = processInitial(this.contributors, importer);
+		// 根据 profile 创建的上下文
 		ConfigDataActivationContext activationContext = createActivationContext(
 				contributors.getBinder(null, BinderOption.FAIL_ON_BIND_TO_INACTIVE_SOURCE));
+
 		contributors = processWithoutProfiles(contributors, importer, activationContext);
+
 		activationContext = withProfiles(contributors, activationContext);
+
 		contributors = processWithProfiles(contributors, importer, activationContext);
-		applyToEnvironment(contributors, activationContext, importer.getLoadedLocations(),
-				importer.getOptionalLocations());
+
+		applyToEnvironment(contributors, activationContext, importer.getLoadedLocations(), importer.getOptionalLocations());
 	}
 
 	private ConfigDataEnvironmentContributors processInitial(ConfigDataEnvironmentContributors contributors,
