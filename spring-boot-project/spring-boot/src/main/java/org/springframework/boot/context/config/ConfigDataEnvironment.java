@@ -235,16 +235,16 @@ class ConfigDataEnvironment {
 				this.loaders);
 		// 向 BootstrapContext 注册 binder
 		registerBootstrapBinder(this.contributors, null, DENY_INACTIVE_BINDING);
-		// 初始化
+		// 处理解析配置
 		ConfigDataEnvironmentContributors contributors = processInitial(this.contributors, importer);
 		// 根据 profile 创建的上下文
 		ConfigDataActivationContext activationContext = createActivationContext(
 				contributors.getBinder(null, BinderOption.FAIL_ON_BIND_TO_INACTIVE_SOURCE));
-
+		// 没有 profile 加载配置
 		contributors = processWithoutProfiles(contributors, importer, activationContext);
-
+		// 解析 profile
 		activationContext = withProfiles(contributors, activationContext);
-
+		// 有 profile 加载配置
 		contributors = processWithProfiles(contributors, importer, activationContext);
 
 		applyToEnvironment(contributors, activationContext, importer.getLoadedLocations(), importer.getOptionalLocations());
@@ -308,11 +308,12 @@ class ConfigDataEnvironment {
 			ConfigurationPropertySource source = contributor.getConfigurationPropertySource();
 			if (source != null && !contributor.hasConfigDataOption(ConfigData.Option.IGNORE_PROFILES)) {
 				Binder binder = new Binder(Collections.singleton(source), placeholdersResolver);
+				// 获取 spring.profiles.include，如果存在
 				binder.bind(Profiles.INCLUDE_PROFILES, STRING_LIST).ifBound((includes) -> {
+					// isActive 说明有 children
 					if (!contributor.isActive(activationContext)) {
 						InactiveConfigDataAccessException.throwIfPropertyFound(contributor, Profiles.INCLUDE_PROFILES);
-						InactiveConfigDataAccessException.throwIfPropertyFound(contributor,
-								Profiles.INCLUDE_PROFILES.append("[0]"));
+						InactiveConfigDataAccessException.throwIfPropertyFound(contributor, Profiles.INCLUDE_PROFILES.append("[0]"));
 					}
 					result.addAll(includes);
 				});

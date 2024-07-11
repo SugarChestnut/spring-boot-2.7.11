@@ -65,7 +65,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	private final PropertySource<?> propertySource;
 
 	private final ConfigurationPropertySource configurationPropertySource;
-
+	// 包含配置文件地址
 	private final ConfigDataProperties properties;
 
 	private final ConfigData.Options configDataOptions;
@@ -238,6 +238,7 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 		PlaceholdersResolver placeholdersResolver = new ConfigDataEnvironmentContributorPlaceholdersResolver(
 				contributors, activationContext, this, true);
 		Binder binder = new Binder(sources, placeholdersResolver, null, null, null);
+		// 替换可使用资源
 		UseLegacyConfigProcessingException.throwIfRequested(binder);
 		// 获取配置资源
 		ConfigDataProperties properties = ConfigDataProperties.get(binder);
@@ -542,6 +543,10 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 			return next;
 		}
 
+		/**
+		 * 深度遍历算法
+		 * @return
+		 */
 		private ConfigDataEnvironmentContributor fetchIfNecessary() {
 			if (this.next != null) {
 				return this.next;

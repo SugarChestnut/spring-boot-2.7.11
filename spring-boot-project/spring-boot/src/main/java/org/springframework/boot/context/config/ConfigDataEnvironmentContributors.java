@@ -98,12 +98,13 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 		ConfigDataEnvironmentContributors result = this;
 		int processed = 0;
 		while (true) {
+			// 需要处理资源
 			ConfigDataEnvironmentContributor contributor = getNextToProcess(result, activationContext, importPhase);
 			if (contributor == null) {
 				this.logger.trace(LogMessage.format("Processed imports for of %d contributors", processed));
 				return result;
 			}
-			// 未绑定资源处理
+			// 处理资源，Kind.UNBOUND_IMPORT -> Kind.BOUND_IMPORT
 			if (contributor.getKind() == Kind.UNBOUND_IMPORT) {
 				// 解析未绑定资源，返回一个已绑定资源
 				ConfigDataEnvironmentContributor bound = contributor.withBoundProperties(result, activationContext);
@@ -115,13 +116,17 @@ class ConfigDataEnvironmentContributors implements Iterable<ConfigDataEnvironmen
 			ConfigDataLocationResolverContext locationResolverContext = new ContributorConfigDataLocationResolverContext(
 					result, contributor, activationContext);
 			ConfigDataLoaderContext loaderContext = new ContributorDataLoaderContext(this);
+			// 需要导入的配置位置信息
 			List<ConfigDataLocation> imports = contributor.getImports();
 			this.logger.trace(LogMessage.format("Processing imports %s", imports));
+			// 解析资源，获得 profile 和 propertySource
 			Map<ConfigDataResolutionResult, ConfigData> imported = importer.resolveAndLoad(activationContext,
 					locationResolverContext, loaderContext, imports);
+
 			this.logger.trace(LogMessage.of(() -> getImportedMessage(imported.keySet())));
-			ConfigDataEnvironmentContributor contributorAndChildren = contributor.withChildren(importPhase,
-					asContributors(imported));
+			// 解析创建一个 contributor
+			ConfigDataEnvironmentContributor contributorAndChildren = contributor.withChildren(importPhase, asContributors(imported));
+			// 用解析获得的 contributor 替换原来的 contributor
 			result = new ConfigDataEnvironmentContributors(this.logger, this.bootstrapContext,
 					result.getRoot().withReplacement(contributor, contributorAndChildren));
 			// 计数

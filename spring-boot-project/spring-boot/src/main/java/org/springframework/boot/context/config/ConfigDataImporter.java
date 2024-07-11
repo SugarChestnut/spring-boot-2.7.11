@@ -122,6 +122,7 @@ class ConfigDataImporter {
 			if (resource.isOptional()) {
 				this.optionalLocations.add(location);
 			}
+			// 已经加载过了
 			if (this.loaded.contains(resource)) {
 				this.logger
 					.trace(LogMessage.format("Already loaded resource %s ignoring location %s", resource, location));

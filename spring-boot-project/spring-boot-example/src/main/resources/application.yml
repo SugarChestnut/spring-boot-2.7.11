@@ -3,6 +3,11 @@ normal:
 server:
     port: 9090
 
+spring:
+    profiles:
+        include: dev,prod
+        active: dev
+
 management:
     endpoints:
         web:

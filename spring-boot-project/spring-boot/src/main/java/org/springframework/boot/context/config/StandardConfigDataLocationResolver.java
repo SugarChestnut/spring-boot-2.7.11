@@ -85,8 +85,10 @@ public class StandardConfigDataLocationResolver
 	 */
 	public StandardConfigDataLocationResolver(Log logger, Binder binder, ResourceLoader resourceLoader) {
 		this.logger = logger;
+		// 不同的文件类型，使用不同的加载器
 		this.propertySourceLoaders = SpringFactoriesLoader.loadFactories(PropertySourceLoader.class,
 				getClass().getClassLoader());
+		// 配置名称
 		this.configNames = getConfigNames(binder);
 		this.resourceLoader = new LocationResourceLoader(resourceLoader);
 	}
@@ -162,6 +164,7 @@ public class StandardConfigDataLocationResolver
 
 	private String getResourceLocation(ConfigDataLocationResolverContext context,
 			ConfigDataLocation configDataLocation) {
+		// 如果存在 resource 前缀，移除
 		String resourceLocation = configDataLocation.getNonPrefixedValue(PREFIX);
 		boolean isAbsolute = resourceLocation.startsWith("/") || URL_PREFIX.matcher(resourceLocation).matches();
 		if (isAbsolute) {
@@ -220,6 +223,7 @@ public class StandardConfigDataLocationResolver
 		for (PropertySourceLoader propertySourceLoader : this.propertySourceLoaders) {
 			String extension = getLoadableFileExtension(propertySourceLoader, file);
 			if (extension != null) {
+				// 文件名称
 				String root = file.substring(0, file.length() - extension.length() - 1);
 				StandardConfigDataReference reference = new StandardConfigDataReference(configDataLocation, null, root,
 						profile, (!extensionHintLocation) ? extension : null, propertySourceLoader);
@@ -293,6 +297,7 @@ public class StandardConfigDataLocationResolver
 
 	private List<StandardConfigDataResource> resolve(StandardConfigDataReference reference) {
 		if (!this.resourceLoader.isPattern(reference.getResourceLocation())) {
+			// 不存在 "*"
 			return resolveNonPattern(reference);
 		}
 		return resolvePattern(reference);
